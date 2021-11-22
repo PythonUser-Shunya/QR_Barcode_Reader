@@ -1,10 +1,19 @@
 # このファイルを右上の再生ボタンで実行する
 import PySimpleGUI as sg
+from numpy import fabs
 import function_QR_Barcode
 
 
 # デザインテーマの設定
 sg.theme('DarkTeal7')
+
+
+def print_err():
+    print("保存できませんでした。以下が原因である可能性があります。")
+    print("・ウイルスバスターなどのセキュリティーが邪魔をしている",
+          "・Excelファイルを開いている", sep="\n")
+    print("　Excelファイルを開いている場合は閉じてからもう一度「保存」ボタンを押してください。")
+
 
 # ウィンドウの部品とレイアウト
 layout = [
@@ -16,7 +25,7 @@ layout = [
     [sg.Button('③カメラ起動 (Escで終了) ', key='camera')],
     [sg.Text('④場所', size=(10, 1)), sg.Combo(('研究室', '房総', '葉山', '八雲', '水上'),
                                             default_value="研究室", size=(10, 1), key='place'), sg.Text("直接入力も可")],
-    [sg.Text('⑤使用者', size=(10, 1)), sg.Combo(('定例', '神田', '松村', '左京楓'),
+    [sg.Text('⑤使用者', size=(10, 1)), sg.Combo(('定例', '神田', '松村', '佐京楓'),
                                              default_value="", size=(10, 1), key='user'), sg.Text("必要な場合のみ。直接入力も可")],
     [sg.Checkbox('⑥間違いはありませんか？', default=False, key="TF")],
     [sg.Button('⑦保存', key='save', pad=((5, 0), (30, 10)))],
@@ -68,8 +77,7 @@ while True:
                     if ok_make_new_excel_battery is True:
                         print("保存が完了しました。")
                 except PermissionError:
-                    print("保存できませんでした。以下が原因である可能性があります。")
-                    print("・ウイルスバスターなどのセキュリティーが邪魔をしている", "・Excelファイルを開いている", sep="\n")
+                    print_err()
 
             elif "SD" in values["inputFilePath"]:
                 if values["user"] is not None:
@@ -77,28 +85,26 @@ while True:
                 else:
                     user = ""
                 try:
-                    ok_make_new_excel_SD = function_QR_Barcode.make_new_excel_SD(xlsx_file_path, place, read_list, user)
+                    ok_make_new_excel_SD = function_QR_Barcode.make_new_excel_SD(
+                        xlsx_file_path, place, read_list, user)
                     if ok_make_new_excel_SD is True:
                         print("保存が完了しました。")
                 except PermissionError:
-                    print("保存できませんでした。以下が原因である可能性があります。")
-                    print("・ウイルスバスターなどのセキュリティーが邪魔をしている",
-                          "・Excelファイルを開いている", sep="\n")
-                    
+                    print_err()
+
             else:
                 if values["user"] is not None:
                     user = values["user"]
                 else:
                     user = ""
                 try:
-                    ok_make_new_excel_camera = function_QR_Barcode.make_new_excel_camera(xlsx_file_path, place, read_list, user)
+                    ok_make_new_excel_camera = function_QR_Barcode.make_new_excel_camera(
+                        xlsx_file_path, place, read_list, user)
                     if ok_make_new_excel_camera is True:
                         print("保存が完了しました。")
                 except PermissionError:
-                    print("保存できませんでした。以下が原因である可能性があります。")
-                    print("・ウイルスバスターなどのセキュリティーが邪魔をしている",
-                          "・Excelファイルを開いている", sep="\n")
-                    
+                    print_err()
+
         else:
             print("チェックボックスを確認してください")
 window.close()
