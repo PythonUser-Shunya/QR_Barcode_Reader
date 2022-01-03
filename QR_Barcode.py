@@ -1,19 +1,9 @@
-# このファイルを右上の再生ボタンで実行する
 import PySimpleGUI as sg
-from numpy import fabs
 import function_QR_Barcode
 
 
 # デザインテーマの設定
 sg.theme('DarkTeal7')
-
-
-def print_err():
-    print("保存できませんでした。以下が原因である可能性があります。")
-    print("・ウイルスバスターなどのセキュリティーが邪魔をしている",
-          "・Excelファイルを開いている", sep="\n")
-    print("　Excelファイルを開いている場合は閉じてからもう一度「保存」ボタンを押してください。")
-
 
 # ウィンドウの部品とレイアウト
 layout = [
@@ -21,7 +11,7 @@ layout = [
     [sg.FileBrowse('①ファイルを選択', file_types=(
         ("Input File", ".xlsx"), )), sg.Input(key='inputFilePath')],
     [sg.Text('②カメラ番号', size=(10, 1)), sg.Combo((0, 1, 2),
-                                               default_value=0, size=(10, 1), key='camera_number'), sg.Text("iPoneはどれだ")],
+                                               default_value=0, size=(10, 1), key='camera_number'), sg.Text("iPhoneはどれだ")],
     [sg.Button('③カメラ起動 (Escで終了) ', key='camera')],
     [sg.Text('④場所', size=(10, 1)), sg.Combo(('研究室', '房総', '葉山', '八雲', '水上'),
                                             default_value="研究室", size=(10, 1), key='place'), sg.Text("直接入力も可")],
@@ -34,6 +24,17 @@ layout = [
 
 # ウィンドウの生成
 window = sg.Window('バーコード読み取り', layout)
+
+
+def print_err():
+    """
+    エラー出力
+    """
+    print("保存できませんでした。以下が原因である可能性があります。")
+    print("・ウイルスバスターなどのセキュリティーが邪魔をしている",
+          "・Excelファイルを開いている", sep="\n")
+    print("　Excelファイルを開いている場合はExcelファイルを閉じてからもう一度「保存」ボタンを押してください。")
+
 
 # イベントループ
 while True:
